@@ -1,0 +1,58 @@
+
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: sebuah-service-account
+  namespace: sebuah-namespace
+
+---
+
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: seketika-service-account
+  namespace: seketika-namespace
+
+---
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: namespace-reader
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "pods", "services", "endpoints", "secrets"]
+    verbs: ["get", "list", "watch"]
+    
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: sebuah-namespace-reader-binding
+subjects:
+  - kind: ServiceAccount
+    name: sebuah-service-account
+    namespace: sebuah-namespace
+    apiGroup: ""
+roleRef:
+  kind: ClusterRole
+  name: namespace-reader
+  apiGroup: ""
+
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: seketika-namespace-reader-binding
+subjects:
+  - kind: ServiceAccount
+    name: seketika-service-account
+    namespace: seketika-namespace
+    apiGroup: ""
+roleRef:
+  kind: ClusterRole
+  name: namespace-reader
+  apiGroup: ""

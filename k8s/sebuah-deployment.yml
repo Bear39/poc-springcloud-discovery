@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sebuah
+  name: sebuah
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sebuah
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: sebuah
+    spec:
+      serviceAccountName: tester
+      containers:
+      - image: sebuah-service
+        name: sebuah-service
+        imagePullPolicy: Never
+        resources: {}
+        env: 
+        - name: LOGGING_LEVEL_CUMA_NYOBANYOBA_SEBUAHSERVIS
+          value: "info"
+        - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
+          value: "true"
+        - name: MANAGEMENT_HEALTH_READINESSSTATE_ENABLED
+          value: "true"
+        - name: MANAGEMENT_HEALTH_LIVENESSSTATE_ENABLED
+          value: "true"
+        - name: SERVER_SHUTDOWN
+          value: "graceful"
+        # - name: EUREKA_SERVER_ADDRESS
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: eureka-cm
+        #       key: eureka_service_address
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh","-c","sleep 10"]
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /health
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /health
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sebuah
+  name: sebuah
+spec:
+  ports:
+  - name: sebuah
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: sebuah
+  type: NodePort
+status:
+  loadBalancer: {}
+  

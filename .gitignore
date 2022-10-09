@@ -1,0 +1,13 @@
+**/target/*
+**/bin/*
+**/.project
+**/settings
+**/.settings
+**/settings/*
+**/.classpath
+*~
+**/~*.RTF
+*.swp
+**/.springBeans
+*.ldb
+*.swo

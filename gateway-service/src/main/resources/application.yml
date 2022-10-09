@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+zuul:
+  routes:
+    sebuah:
+      path: /sebuah/**
+    seketika:
+      path: /seketika/**
+  ratelimit:
+    enabled: true
+    repository: JPA
+    policy-list:
+      sebuah:
+        - limit: 5
+          refresh-interval: 60
+          type:
+            - origin
+      seketika:
+        - limit: 1
+          refresh-interval: 2
+          type:
+            - origin
+  strip-prefix: true

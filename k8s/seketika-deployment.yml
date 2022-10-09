@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: seketika
+  name: seketika
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seketika
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: seketika
+    spec:
+      serviceAccountName: tester
+      containers:
+      - image: seketika-service
+        name: seketika-service
+        imagePullPolicy: Never
+        resources: {}
+        env: 
+        - name: LOGGING_LEVEL_CUMA_NYOBANYOBA_SEKETIKASERVIS
+          value: "info"
+        - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
+          value: "true"
+        - name: MANAGEMENT_HEALTH_READINESSSTATE_ENABLED
+          value: "true"
+        - name: MANAGEMENT_HEALTH_LIVENESSSTATE_ENABLED
+          value: "true"
+        - name: SERVER_SHUTDOWN
+          value: "graceful"
+        # - name: EUREKA_SERVER_ADDRESS
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: eureka-cm
+        #       key: eureka_service_address
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh","-c","sleep 10"]
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /health
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /health
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: seketika
+  name: seketika
+spec:
+  ports:
+  - name: seketika
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: seketika
+  type: NodePort
+status:
+  loadBalancer: {}

@@ -1,0 +1,22 @@
+Eureka Client
+
+- Eureka
+IP:PORT: 10.1.0.65:8080
+Hostname: seketika-fbb695446-987cb
+Homepage: http://seketika-fbb695446-987cb:8080/
+Instance ID: seketika-fbb695446-987cb:seketika:8080
+
+- SpringCloud Kubernetes
+NONE
+
+Discovery Client
+
+- Eureka
+IP:PORT: seketika-fbb695446-987cb:8080
+URI: http://seketika-fbb695446-987cb:8080
+Service ID: SEKETIKA
+
+- SpringCloud Kubernetes
+IP:PORT: 10.1.0.72:8080
+URI: http://10.1.0.72:8080
+Service ID: seketika
